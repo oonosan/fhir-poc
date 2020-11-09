@@ -5,4 +5,13 @@
     <RootNamespace>FHIR_POC.Services</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Hl7.Fhir.ElementModel" Version="2.0.0-beta2" />
+    <PackageReference Include="Hl7.Fhir.R4" Version="2.0.0-beta2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FHIR-POC.Domain\FHIR-POC.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

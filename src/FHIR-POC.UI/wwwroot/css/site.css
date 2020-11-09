@@ -136,7 +136,7 @@ app {
         top: 0.5rem;
     }
 
-/* Filter */
+/* FILTERS */
 .search-filter {
     display: flex;
     margin: 1em;
@@ -150,6 +150,7 @@ app {
     justify-content: space-between;
 }
 
+/* Input text */
 .active-cyan-2 {
     margin-left: 1em;
     margin-right: 1em;
@@ -167,21 +168,34 @@ input.form-control[type=text] {
     box-shadow: 0 8px 6px -6px #4dd0e1;
 }
 
+/* Gender */
 .gender {
     border: 0;
     border-bottom: 1px solid #ADADAD;
     border-radius: 0;
 }
 
-    .gender:focus {
-        border-bottom: 1px solid #4dd0e1;
-        box-shadow: 0 8px 6px -6px #4dd0e1;
-    }
+.gender:focus {
+    border-bottom: 1px solid #4dd0e1;
+    box-shadow: 0 8px 6px -6px #4dd0e1;
+}
 
+/* Birthday */
+#datepicker {
+    border: 0;
+    border-bottom: 1px solid #ADADAD;
+    border-radius: 0;
+}
+
+#datepicker:focus {
+    border-bottom: 1px solid #4dd0e1;
+    box-shadow: 0 8px 6px -6px #4dd0e1;
+}
+
+/* Search Button */
 .search-button {
     width: 10em;
 }
-
 
 .page-link {
     cursor: pointer;

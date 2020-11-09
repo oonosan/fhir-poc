@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FHIR-POC.Domain\FHIR-POC.Domain.csproj" />
+    <ProjectReference Include="..\FHIR-POC.Services\FHIR-POC.Services.csproj" />
   </ItemGroup>
 
 </Project>

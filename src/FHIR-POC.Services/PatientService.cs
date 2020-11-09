@@ -6,15 +6,15 @@ using System.Linq;
 using System.Collections.Generic;
 using FHIR_POC.Domain.Models;
 
-namespace FHIR_POC.UI.Data
+namespace FHIR_POC.Services
 {
-    public class FHIRService
+    public class PatientService
     {
         public Bundle results;
         private FhirClient client;
         public bool readFailed;
 
-        public FHIRService()
+        public PatientService()
         {
             // Create a client
             client = new FhirClient("http://hapi.fhir.org/baseR4/");

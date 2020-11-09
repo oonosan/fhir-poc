@@ -1,21 +1,9 @@
 ﻿@page "/searchPatient"
 
-@using FHIR_POC.UI.Data
 @using FHIR_POC.Domain.Models
-@inject FHIRService FhirService
-@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+@using FHIR_POC.Services
 
-
-@functions {
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JsRuntime.InvokeAsync<object>("showdatepicker");
-            firstRender = false;
-        }
-    }
-}
+@inject PatientService  PatientService
 
 <h3>Search Patient</h3>
 
@@ -41,16 +29,20 @@
         </div>
 
         <!-- Gender -->
-        <select class="form-control gender" @bind="Gender">
-            <option style="display:none">Gender</option>
-            <option value="All">All</option>
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-            <option value="Missing">Missing</option>
-        </select>
+        <div class="md-form active-cyan-2 mb-3">
+            <select class="form-control gender" @bind="Gender">
+                <option style="display:none">Gender</option>
+                <option value="All">All</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Missing">Missing</option>
+            </select>
+        </div>
 
         <!-- Birth Date -->
-        <input type="date" id="datepicker" @bind-value="BirthDate" />
+        <div class="md-form active-cyan-2 mb-3">
+            <input  type="date" class="form-control" id="datepicker" @bind-value="BirthDate" />
+        </div>
     </div>
 
     <div class="search-row">
@@ -175,7 +167,7 @@ else
     {
         try
         {
-            patients = await FhirService.GetPatientAsync(PatientId, Gender, Name, LastName, Country, State, City, BirthDate);
+            patients = await PatientService.GetPatientAsync(PatientId, Gender, Name, LastName, Country, State, City, BirthDate);
         }
         catch (Exception e)
         {
@@ -188,7 +180,7 @@ else
     {
         try
         {
-            patients = await FhirService.PreviousPage();
+            patients = await PatientService.PreviousPage();
         }
         catch (Exception e)
         {
@@ -201,7 +193,7 @@ else
     {
         try
         {
-            patients = await FhirService.NextPage();
+            patients = await PatientService.NextPage();
         }
         catch (Exception e)
         {

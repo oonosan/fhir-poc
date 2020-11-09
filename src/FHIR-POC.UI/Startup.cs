@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using FHIR_POC.UI.Data;
+using FHIR_POC.Services;
 
 namespace FHIR_POC.UI
 {
@@ -22,7 +22,7 @@ namespace FHIR_POC.UI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<FHIRService>();
+            services.AddSingleton<PatientService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
