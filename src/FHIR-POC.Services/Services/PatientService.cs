@@ -5,10 +5,11 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using FHIR_POC.Domain.Models;
+using FHIR_POC.Application.Interfaces;
 
 namespace FHIR_POC.Services
 {
-    public class PatientService
+    public class PatientService : IPatientService
     {
         public Bundle results;
         private FhirClient client;
@@ -17,7 +18,8 @@ namespace FHIR_POC.Services
         public PatientService()
         {
             // Create a client
-            client = new FhirClient("http://hapi.fhir.org/baseR4/");
+            //client = new FhirClient("http://hapi.fhir.org/baseR4/");
+            client = new FhirClient("https://vonk.fire.ly/");
             client.Settings.PreferredFormat = ResourceFormat.Json;
             client.Settings.Timeout = 120000; // The timeout is set in milliseconds, with a default of 100000
         }
@@ -67,8 +69,14 @@ namespace FHIR_POC.Services
                     var id = p.Resource.Id;
                     if (!string.IsNullOrEmpty(id))
                     {
-                        var patient = GetById(id);
-                        result.Add(patient);
+                        try
+                        {
+                            var patient = GetById(id);
+                            result.Add(patient);
+                        } catch(Exception e)
+                        {
+                            continue;
+                        }
                     }
                 }
             }
@@ -112,7 +120,7 @@ namespace FHIR_POC.Services
 
             if (!string.IsNullOrEmpty(name))
             {
-                query.Add("name", name);
+                query.Add("given", name);
             }
 
             if (!string.IsNullOrEmpty(lastName))
@@ -150,7 +158,8 @@ namespace FHIR_POC.Services
         /// <returns>Models.Patient</returns>
         public Domain.Models.Patient GetById(string patientId)
         {
-            var location = new Uri($"http://hapi.fhir.org/baseR4/Patient/{patientId}");
+            //var location = new Uri($"http://hapi.fhir.org/baseR4/Patient/{patientId}");
+            var location = new Uri($"https://vonk.fire.ly/Patient/{patientId}");
 
             client.Settings.PreferredFormat = ResourceFormat.Json;
             client.Settings.Timeout = 120000; // The timeout is set in milliseconds, with a default of 100000
@@ -308,6 +317,11 @@ namespace FHIR_POC.Services
             return System.Threading.Tasks.Task.FromResult(result);
         }
 
+        /// <summary>
+        /// Parse date of type DateTimeOffset to string
+        /// </summary>
+        /// <param name="date">DateTimeOffset</param>
+        /// <returns>string</returns>
         public string getDate(DateTimeOffset date)
         {
             var month = string.Empty;

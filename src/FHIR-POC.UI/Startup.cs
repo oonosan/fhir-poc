@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FHIR_POC.Services;
+using FHIR_POC.Services.Extensions;
 
 namespace FHIR_POC.UI
 {
@@ -23,6 +24,7 @@ namespace FHIR_POC.UI
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<PatientService>();
+            RegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +51,11 @@ namespace FHIR_POC.UI
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+        }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+            DependencyContainer.RegisterServices(services);
         }
     }
 }
