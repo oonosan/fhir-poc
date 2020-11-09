@@ -1,7 +1,7 @@
-﻿using FHIR_POC.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FHIR_POC.Application.Models;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
 
@@ -23,7 +23,7 @@ namespace FHIR_POC.Application.Interfaces
         /// </summary>
         /// <param name="patientId">Patient Id</param>
         /// <returns>Models.Patient</returns>
-        Domain.Models.Patient GetById(string patientId);
+        Models.Patient GetById(string patientId);
 
         /// <summary>
         /// Joins a list a string to a single string
@@ -37,7 +37,7 @@ namespace FHIR_POC.Application.Interfaces
         /// </summary>
         /// <param name="addressList">Hl7.Fhir.Model.Address</param>
         /// <returns>IList<Models.Address></returns>
-        IList<Domain.Models.Address> GetAddresses(List<Hl7.Fhir.Model.Address> addressList);
+        IList<Models.Address> GetAddresses(List<Hl7.Fhir.Model.Address> addressList);
 
         /// <summary>
         /// Parse HumanName name to PatientName
@@ -51,19 +51,19 @@ namespace FHIR_POC.Application.Interfaces
         /// </summary>
         /// <param name="patientFhir">Hl7.Fhir.Model.Patient</param>
         /// <returns>Models.Patient</returns>
-        Domain.Models.Patient GetPatientModel(Hl7.Fhir.Model.Patient patientFhir);
+        Models.Patient GetPatientModel(Hl7.Fhir.Model.Patient patientFhir);
 
         /// <summary>
         /// Goes to the next page of the search
         /// </summary>
         /// <returns>List<Models.Patient></returns>
-        Task<List<Domain.Models.Patient>> NextPage();
+        Task<List<Models.Patient>> NextPage();
 
         /// <summary>
         /// Goes to the previous page of the search
         /// </summary>
         /// <returns>List<Models.Patient></returns>
-        Task<List<Domain.Models.Patient>> PreviousPage();
+        Task<List<Models.Patient>> PreviousPage();
 
         /// <summary>
         /// Parse date of type DateTimeOffset to string

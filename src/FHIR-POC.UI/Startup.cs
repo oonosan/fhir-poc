@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FHIR_POC.Services;
+using FHIR_POC.Infrastructure;
 using FHIR_POC.Services.Extensions;
 
 namespace FHIR_POC.UI
@@ -23,7 +24,7 @@ namespace FHIR_POC.UI
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<PatientService>();
+            services.AddTransient<PatientService>();
             RegisterServices(services);
         }
 

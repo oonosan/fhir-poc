@@ -4,24 +4,21 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using FHIR_POC.Domain.Models;
 using FHIR_POC.Application.Interfaces;
+using FHIR_POC.Application.Models;
+using FHIR_POC.Infrastructure.Repositories;
 
 namespace FHIR_POC.Services
 {
     public class PatientService : IPatientService
     {
         public Bundle results;
-        private FhirClient client;
+        private IPatientRepository _patientRepository;
         public bool readFailed;
 
-        public PatientService()
+        public PatientService(IPatientRepository patientRepository)
         {
-            // Create a client
-            //client = new FhirClient("http://hapi.fhir.org/baseR4/");
-            client = new FhirClient("https://vonk.fire.ly/");
-            client.Settings.PreferredFormat = ResourceFormat.Json;
-            client.Settings.Timeout = 120000; // The timeout is set in milliseconds, with a default of 100000
+            _patientRepository = patientRepository;
         }
 
         /// <summary>
@@ -32,10 +29,10 @@ namespace FHIR_POC.Services
         /// <param name="name">Name</param>
         /// <param name="lastName">Last Name</param>
         /// <returns>List<Models.Patient></returns>
-        public Task<List<Domain.Models.Patient>> GetPatientAsync(string patientId, string gender, string name, string lastName, string country, string state, string city, DateTimeOffset birthDate)
+        public Task<List<Application.Models.Patient>> GetPatientAsync(string patientId, string gender, string name, string lastName, string country, string state, string city, DateTimeOffset birthDate)
         {
             results = new Bundle();
-            var result = new List<Domain.Models.Patient>();
+            var result = new List<Application.Models.Patient>();
 
             if (string.IsNullOrEmpty(gender) &&
                 string.IsNullOrEmpty(patientId) &&
@@ -62,7 +59,7 @@ namespace FHIR_POC.Services
                 var query = GetQuery(gender, name, lastName, country, state, city, birthDateString);
 
                 // Execute query
-                results = client.Search<Hl7.Fhir.Model.Patient>(query);
+                results = _patientRepository.ExecuteQuery(query);
 
                 foreach (var p in results.Entry)
                 {
@@ -73,7 +70,8 @@ namespace FHIR_POC.Services
                         {
                             var patient = GetById(id);
                             result.Add(patient);
-                        } catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
                             continue;
                         }
@@ -92,7 +90,7 @@ namespace FHIR_POC.Services
         /// <returns>SearchParams</returns>
         public SearchParams GetQuery(string gender, string name, string lastName, string country, string state, string city, string birthDate)
         {
-            int resultsPerPage = 10;
+            int resultsPerPage = 5;
 
             var query = new SearchParams()
                         .OrderBy("name", SortOrder.Ascending);
@@ -156,26 +154,18 @@ namespace FHIR_POC.Services
         /// </summary>
         /// <param name="patientId">Patient Id</param>
         /// <returns>Models.Patient</returns>
-        public Domain.Models.Patient GetById(string patientId)
+        public Application.Models.Patient GetById(string patientId)
         {
-            //var location = new Uri($"http://hapi.fhir.org/baseR4/Patient/{patientId}");
-            var location = new Uri($"https://vonk.fire.ly/Patient/{patientId}");
-
-            client.Settings.PreferredFormat = ResourceFormat.Json;
-            client.Settings.Timeout = 120000; // The timeout is set in milliseconds, with a default of 100000
-
             try
             {
                 readFailed = false;
-                var result = client.Read<Hl7.Fhir.Model.Patient>(location);
+                var result = _patientRepository.GetById(patientId);
                 return GetPatientModel(result);
-            }
-            catch (Hl7.Fhir.ElementModel.StructuralTypeException structuralTypeException)
+            } catch (Exception e)
             {
                 readFailed = true;
-                throw structuralTypeException;
+                throw e;
             }
-
         }
 
         /// <summary>
@@ -200,18 +190,18 @@ namespace FHIR_POC.Services
         /// </summary>
         /// <param name="addressList">Hl7.Fhir.Model.Address</param>
         /// <returns>IList<Models.Address></returns>
-        public IList<Domain.Models.Address> GetAddresses(List<Hl7.Fhir.Model.Address> addressList)
+        public IList<Application.Models.Address> GetAddresses(List<Hl7.Fhir.Model.Address> addressList)
         {
             if (addressList is null)
             {
                 throw new ArgumentNullException(nameof(addressList));
             }
 
-            var addresses = new List<Domain.Models.Address>();
+            var addresses = new List<Application.Models.Address>();
 
             foreach (var a in addressList)
             {
-                var address = new Domain.Models.Address()
+                var address = new Application.Models.Address()
                 {
                     Country = a.Country,
                     State = a.State,
@@ -253,9 +243,9 @@ namespace FHIR_POC.Services
         /// </summary>
         /// <param name="patientFhir">Hl7.Fhir.Model.Patient</param>
         /// <returns>Models.Patient</returns>
-        public Domain.Models.Patient GetPatientModel(Hl7.Fhir.Model.Patient patientFhir)
+        public Application.Models.Patient GetPatientModel(Hl7.Fhir.Model.Patient patientFhir)
         {
-            var patient = new Domain.Models.Patient()
+            var patient = new Application.Models.Patient()
             {
                 Id = patientFhir.Id,
                 PatientName = GetNames(patientFhir.Name),
@@ -271,11 +261,12 @@ namespace FHIR_POC.Services
         /// Goes to the next page of the search
         /// </summary>
         /// <returns>List<Models.Patient></returns>
-        public Task<List<Domain.Models.Patient>> NextPage()
+        public Task<List<Application.Models.Patient>> NextPage()
         {
-            var result = new List<Domain.Models.Patient>();
+            var result = new List<Application.Models.Patient>();
 
-            results = client.Continue(results, PageDirection.Next);
+            results = _patientRepository.GetNextPage(results);
+
             if (results != null)
             {
                 foreach (var p in results.Entry)
@@ -296,11 +287,11 @@ namespace FHIR_POC.Services
         /// Goes to the previous page of the search
         /// </summary>
         /// <returns>List<Models.Patient></returns>
-        public Task<List<Domain.Models.Patient>> PreviousPage()
+        public Task<List<Application.Models.Patient>> PreviousPage()
         {
-            var result = new List<Domain.Models.Patient>();
+            var result = new List<Application.Models.Patient>();
 
-            results = client.Continue(results, PageDirection.Previous);
+            results = _patientRepository.GetPreviousPage(results);
             if (results != null)
             {
                 foreach (var p in results.Entry)
