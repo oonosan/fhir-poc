@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1A59748E-56BC-4EAD-9E37-74EF3238F622}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FHIR-POC.UI", "src\FHIR-POC.UI\FHIR-POC.UI.csproj", "{BFD69B20-812E-4CE3-9E30-2064C087E733}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FHIR-POC.Domain", "src\FHIR-POC.Domain\FHIR-POC.Domain.csproj", "{BD5FBB0E-410E-4170-9D8F-2997E6087B7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FHIR-POC.Application", "src\FHIR-POC.Application\FHIR-POC.Application.csproj", "{31D966FB-34E7-4B4C-BB8F-820D091AE01D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FHIR-POC.Infrastructure.Data", "src\FHIR-POC.Infrastructure.Data\FHIR-POC.Infrastructure.Data.csproj", "{2DB87E82-6F13-4F08-8226-7A45C8A4E0BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FHIR-POC.Services", "src\FHIR-POC.Services\FHIR-POC.Services.csproj", "{0A443753-7221-4066-85A6-66F81FADC9FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFD69B20-812E-4CE3-9E30-2064C087E733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD69B20-812E-4CE3-9E30-2064C087E733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD69B20-812E-4CE3-9E30-2064C087E733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD69B20-812E-4CE3-9E30-2064C087E733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD5FBB0E-410E-4170-9D8F-2997E6087B7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD5FBB0E-410E-4170-9D8F-2997E6087B7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD5FBB0E-410E-4170-9D8F-2997E6087B7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD5FBB0E-410E-4170-9D8F-2997E6087B7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D966FB-34E7-4B4C-BB8F-820D091AE01D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D966FB-34E7-4B4C-BB8F-820D091AE01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D966FB-34E7-4B4C-BB8F-820D091AE01D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D966FB-34E7-4B4C-BB8F-820D091AE01D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DB87E82-6F13-4F08-8226-7A45C8A4E0BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DB87E82-6F13-4F08-8226-7A45C8A4E0BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DB87E82-6F13-4F08-8226-7A45C8A4E0BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DB87E82-6F13-4F08-8226-7A45C8A4E0BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A443753-7221-4066-85A6-66F81FADC9FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A443753-7221-4066-85A6-66F81FADC9FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A443753-7221-4066-85A6-66F81FADC9FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A443753-7221-4066-85A6-66F81FADC9FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFD69B20-812E-4CE3-9E30-2064C087E733} = {1A59748E-56BC-4EAD-9E37-74EF3238F622}
+		{BD5FBB0E-410E-4170-9D8F-2997E6087B7F} = {1A59748E-56BC-4EAD-9E37-74EF3238F622}
+		{31D966FB-34E7-4B4C-BB8F-820D091AE01D} = {1A59748E-56BC-4EAD-9E37-74EF3238F622}
+		{2DB87E82-6F13-4F08-8226-7A45C8A4E0BD} = {1A59748E-56BC-4EAD-9E37-74EF3238F622}
+		{0A443753-7221-4066-85A6-66F81FADC9FD} = {1A59748E-56BC-4EAD-9E37-74EF3238F622}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50D77099-7BF2-4C6D-AB17-B4B6524A7F6F}
+	EndGlobalSection
+EndGlobal

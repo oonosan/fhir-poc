@@ -1,0 +1,212 @@
+﻿@page "/searchPatient"
+
+@using FHIR_POC.UI.Data
+@using FHIR_POC.Domain.Models
+@inject FHIRService FhirService
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime;
+
+
+@functions {
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JsRuntime.InvokeAsync<object>("showdatepicker");
+            firstRender = false;
+        }
+    }
+}
+
+<h3>Search Patient</h3>
+
+<!-- Search bar -->
+<div class="search-filter">
+
+    <!-- Technical Id -->
+    <div class="row">
+        <div class="md-form active-cyan-2 mb-3">
+            <input class="form-control input-text" type="text" placeholder="Patient Id" aria-label="Search" @bind-value="PatientId">
+        </div>
+    </div>
+
+    <div class="search-row">
+        <!-- Name -->
+        <div class="md-form active-cyan-2 mb-3">
+            <input class="form-control input-text" type="text" placeholder="Name" aria-label="Name" @bind-value="Name">
+        </div>
+
+        <!-- Family Name -->
+        <div class="md-form active-cyan-2 mb-3">
+            <input class="form-control input-text" type="text" placeholder="Last Name" aria-label="LastName" @bind-value="LastName">
+        </div>
+
+        <!-- Gender -->
+        <select class="form-control gender" @bind="Gender">
+            <option style="display:none">Gender</option>
+            <option value="All">All</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Missing">Missing</option>
+        </select>
+
+        <!-- Birth Date -->
+        <input type="date" id="datepicker" @bind-value="BirthDate" />
+    </div>
+
+    <div class="search-row">
+        <!-- Country -->
+        <div class="md-form active-cyan-2 mb-3">
+            <input class="form-control input-text" type="text" placeholder="Country" aria-label="Search" @bind-value="Country">
+        </div>
+
+        <!-- State -->
+        <div class="md-form active-cyan-2 mb-3">
+            <input class="form-control input-text" type="text" placeholder="State" aria-label="Search" @bind-value="State">
+        </div>
+
+        <!-- City -->
+        <div class="md-form active-cyan-2 mb-3">
+            <input class="form-control input-text" type="text" placeholder="City" aria-label="Search" @bind-value="City">
+        </div>
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-dark search-button" @onclick="Search">Search</button>
+    </div>
+
+</div>
+@if (@readFailed)
+{
+    <h4>Sorry, we could not load this patient due to an error.</h4>
+    <p>@exceptionMessage</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Birth Date</th>
+                <th>Read</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in patients)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>
+                        @foreach (var patientName in p.PatientName)
+                        {
+                            <p>
+                                @foreach (var name in patientName.Name)
+                                {
+                                    @name
+                                }
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @foreach (var lastName in p.PatientName)
+                        {
+                            <p>
+                                @lastName.LastName
+                                @if (!string.IsNullOrEmpty(lastName.Use))
+                                {
+                                    <span>(@lastName.Use)</span>
+                                }
+                            </p>
+                        }
+                    </td>
+                    <td>@p.Gender</td>
+                    <td>@p.BirthDate</td>
+                    <td><a href="http://hapi.fhir.org/baseR4/Patient/@p.Id" target="_blank">See More</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@if (patients.Count() > 0)
+{
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" tabindex="-1" @onclick="PreviousPage">Previous</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Current</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" tabindex="-1" @onclick="NextPage">Next Page</a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@code {
+    [Parameter]
+    public string PatientId { get; set; }
+    [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public string LastName { get; set; }
+    [Parameter]
+    public string Gender { get; set; }
+    [Parameter]
+    public string Country { get; set; }
+    [Parameter]
+    public string State { get; set; }
+    [Parameter]
+    public string City { get; set; }
+    [Parameter]
+    public DateTimeOffset BirthDate { get; set; }
+
+    private List<Patient> patients = new List<Patient>();
+    public bool readFailed = false;
+    public string exceptionMessage;
+
+
+    async Task Search()
+    {
+        try
+        {
+            patients = await FhirService.GetPatientAsync(PatientId, Gender, Name, LastName, Country, State, City, BirthDate);
+        }
+        catch (Exception e)
+        {
+            readFailed = true;
+            exceptionMessage = e.Message;
+        }
+    }
+
+    async Task PreviousPage()
+    {
+        try
+        {
+            patients = await FhirService.PreviousPage();
+        }
+        catch (Exception e)
+        {
+            readFailed = true;
+            exceptionMessage = e.Message;
+        }
+    }
+
+    async Task NextPage()
+    {
+        try
+        {
+            patients = await FhirService.NextPage();
+        }
+        catch (Exception e)
+        {
+            readFailed = true;
+            exceptionMessage = e.Message;
+        }
+    }
+}
